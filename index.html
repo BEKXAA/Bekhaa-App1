@@ -54,6 +54,21 @@ nav{scrollbar-width:thin;-webkit-overflow-scrolling:touch}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
 <div id="app"></div><div id="modal"><div id="mb"></div></div><div id="tt"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* === FIREBASE SOZLAMALARI: o'zingiznikini shu yerga qo'ying === */
+const FIREBASE_CONFIG={
+  apiKey: "AIzaSyB7u2l3cw20TXhG1LND8t1C8ucG7ZbPLUo",
+authDomain: "bekhaa-app.firebaseapp.com",
+projectId: "bekhaa-app",
+storageBucket: "bekhaa-app.firebasestorage.app",
+messagingSenderId: "312340923089",
+appId: "1:312340923089:web:b789847329bd8b1b04bbf0",
+
+};
+/* ============================================================== */
+</script>
 <script>/*bk_err*/window.addEventListener('error',e=>{const a=document.getElementById('app');if(a&&!a.innerHTML.trim())a.innerHTML='<pre style="padding:16px;color:#ffb347;white-space:pre-wrap">Xato: '+e.message+'</pre>'});
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let db,me=null,tab='shop',gameF={},chatTo='all',S={items:[],chat:[],reports:[],notifs:[],users:{},cfg:{}};
@@ -90,7 +105,7 @@ function localDB(){
  return{doc:p=>{const[c,id]=p.split('/');return ref(c,id)},collection:c=>({...query(c,{}),doc:id=>ref(c,id||Math.random().toString(36).slice(2)),add:async d=>{const r=ref(c,Date.now().toString(36)+Math.random().toString(36).slice(2,6));await r.set(d);return r}})}
 }
 async function boot(){
- db=localDB();
+ try{if(typeof firebase!=='undefined'&&FIREBASE_CONFIG.apiKey&&!FIREBASE_CONFIG.apiKey.startsWith('PASTE')){firebase.initializeApp(FIREBASE_CONFIG);db=firebase.firestore()}}catch(e){console.error(e)}if(!db)db=localDB();
  if(!db){$('#app').innerHTML='<div id="auth" class="card"><h2>Bekhaa App</h2><p>Ma\'lumotlar bazasi ulanmadi. Sahifani claude.ai orqali oching va tizimga kiring.</p></div>';return}
  db.collection('users').onSnapshot(s=>{S.loaded=1;S.users={};s.docs.forEach(d=>S.users[d.id]=d.data());render()});
  db.collection('cfg').onSnapshot(s=>{S.cfg={};s.docs.forEach(d=>S.cfg[d.id]=d.data().img);render()});
